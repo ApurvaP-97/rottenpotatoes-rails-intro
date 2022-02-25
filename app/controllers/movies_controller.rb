@@ -8,11 +8,25 @@ class MoviesController < ApplicationController
 
   def index
     #@movies = Movie.all
+    @sort_items = params[:sort]
+    @rating_items = params[:rating]
+    @all_ratings = Movie.all_ratings
+    @checked_ratings = check
     
-    if params[:sort]
-      @movies = Movie.order(params[:sort])
+      if @sort_items
+        @movies = Movie.with_ratings(@checked_ratings).order(@sort_items)
+      else
+        @movies = Movie.with_ratings(@checked_ratings)
+      end
+  end
+  
+  private
+  
+  def check
+    if  @rating_items
+      @rating_items.keys
     else
-      @movies = Movie.all
+      @all_ratings
     end
   end
 
