@@ -24,11 +24,9 @@ class MoviesController < ApplicationController
   
   private
   def check
-    if params[:ratings]
-      params[:ratings].keys
-    else
-      @all_ratings
-    end
+    return @all_ratings if params[:ratings].nil?
+    return params[:ratings] if params[:ratings].is_a?(Array)
+    params[:ratings].keys
   end
 
   def new
