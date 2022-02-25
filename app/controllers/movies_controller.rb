@@ -8,9 +8,8 @@ class MoviesController < ApplicationController
 
   def index
     #@movies = Movie.all
-    @sort_items = params[:sort]
-    @rating_items = params[:rating]
     @all_ratings = Movie.all_ratings
+    @sort_items = params[:sort]
     @checked_ratings = check
     
       if @sort_items
@@ -21,12 +20,9 @@ class MoviesController < ApplicationController
   end
   
   private
-  
   def check
-    if  @rating_items
-      @rating_items.keys
-    else
-      @all_ratings
+    if params[:ratings]
+      params[:ratings].keys
     end
   end
 

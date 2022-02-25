@@ -2,18 +2,32 @@
 <h2>All Movies</h2>
 
 <%#  Part 1: Start here... %>
+<%= form_tag(movies_path, method: :get, :id => 'ratings_form') do %>
+  Include:
+  <br />
+  <table>
+    <% @all_ratings.each do |rating| %>
+      <tr>
+        <td><%= rating %></td>
+        <td><%= check_box_tag "ratings[#{rating}]" %></td>
+      </tr>
+    <% end %>
+  </table>
+  <%= submit_tag 'Refresh', class: 'btn btn-primary', :id => 'ratings_submit' %>
+<% end %>
+<br />
 
 <table class="table table-striped col-md-12" id="movies">
   <thead>
     <tr>
-      <th class="<%= 'hilite' if params[:sort] == "title" %>">
+      <th class="<%= 'hilite' if @sort_items == "title" %>">
         <%= link_to "Movie Title", movies_path(sort: "title"), id: 'title_header',
-                    class: "#{'hlite' if params[:sort] == 'title'}" %>
+                    class: "#{'hlite' if @sort_items == 'title'}" %>
                     
       <th>Rating</th>
-      <th class="<%= 'hilite' if params[:sort] == "release_date" %>">
+      <th class="<%= 'hilite' if @sort_items == "release_date" %>">
         <%= link_to "Release Date", movies_path(sort: "release_date"), id: 'release_date_header',
-                    class: "#{'hlite' if params[:sort] == 'release_date'}" %>
+                    class: "#{'hlite' if @sort_items == 'release_date'}" %>
       <th>More Info</th>
     </tr>
   </thead>
