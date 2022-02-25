@@ -1,4 +1,5 @@
 class Movie < ActiveRecord::Base
+    
   def self.with_ratings(ratings)
     return Movie.all unless ratings
     ratings = ratings.map { |rating| rating.upcase }
@@ -10,4 +11,5 @@ class Movie < ActiveRecord::Base
       record.rating
     end
   end
+  
 end

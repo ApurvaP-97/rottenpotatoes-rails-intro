@@ -11,6 +11,9 @@ class MoviesController < ApplicationController
     @all_ratings = Movie.all_ratings
     @sort_items = params[:sort]
     @checked_ratings = check
+    @checked_ratings.each do |rating|
+      params[rating] = true
+    end
     
       if @sort_items
         @movies = Movie.with_ratings(@checked_ratings).order(@sort_items)
@@ -23,6 +26,8 @@ class MoviesController < ApplicationController
   def check
     if params[:ratings]
       params[:ratings].keys
+    else
+      @all_ratings
     end
   end
 

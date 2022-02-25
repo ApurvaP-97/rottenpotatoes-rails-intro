@@ -2,20 +2,17 @@
 <h2>All Movies</h2>
 
 <%#  Part 1: Start here... %>
-<%= form_tag(movies_path, method: :get, :id => 'ratings_form') do %>
+<%= form_tag movies_path, method: :get, id: 'ratings_form' do %>
   Include:
-  <br />
-  <table>
-    <% @all_ratings.each do |rating| %>
-      <tr>
-        <td><%= rating %></td>
-        <td><%= check_box_tag "ratings[#{rating}]" %></td>
-      </tr>
-    <% end %>
-  </table>
-  <%= submit_tag 'Refresh', class: 'btn btn-primary', :id => 'ratings_submit' %>
+  <% @all_ratings.each do |rating| %>
+    <div class="form-check  form-check-inline">
+      <%= label_tag "ratings[#{rating}]", rating, class: 'form-check-label' %>
+      <%= check_box_tag "ratings[#{rating}]", "1",  @checked_ratings.include?(rating), class: 'form-check-input' %>
+    </div>
+  <% end %>
+  <%= submit_tag 'Refresh', id: 'ratings_submit', class: 'btn btn-primary' %>
 <% end %>
-<br />
+</br>
 
 <table class="table table-striped col-md-12" id="movies">
   <thead>
