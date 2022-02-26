@@ -14,7 +14,6 @@ class MoviesController < ApplicationController
     
     session_reset
 
-    
     if @sort_items
       @movies = Movie.with_ratings(@checked_ratings).order(@sort_items)
     else
@@ -24,10 +23,9 @@ class MoviesController < ApplicationController
     @title_header = session[:sort] == 'title'? 'bg-warning': nil
     @release_date_header = session[:sort] == 'release_date'? 'bg-warning': nil
     
-    
-    
   end
     
+  #Logic for session to remember the checked ratings : Corner Case handled (when all boxes are unchecked, restore the previous session)
   private
   def session_ratings
     if params[:ratings] != nil and params[:ratings] != session[:ratings]
@@ -38,11 +36,13 @@ class MoviesController < ApplicationController
     session[:ratings].keys
   end
   
+  #Logic for session to remember sorting 
   def session_items
     return session[:sort_items] if params[:sort].nil?
     session[:sort_items] = params[:sort]
   end
-
+  
+  #Handling flash problem
   def session_reset
       if (session[:sort] != params[:sort]) or (session[:ratings] != params[:ratings])
         flash.keep
