@@ -10,24 +10,32 @@ class MoviesController < ApplicationController
     #@movies = Movie.all
     @all_ratings = Movie.all_ratings
     @sort_items = session_items
-    @checked_ratings = check
+    @checked_ratings = session_ratings
+    
     session_reset
-    @checked_ratings.each do |rating|
-      params[rating] = true
-    end
+
     
     if @sort_items
       @movies = Movie.with_ratings(@checked_ratings).order(@sort_items)
     else
       @movies = Movie.with_ratings(@checked_ratings)
     end
+    
+    @title_header = session[:sort] == 'title'? 'bg-warning': nil
+    @release_date_header = session[:sort] == 'release_date'? 'bg-warning': nil
+    
+    
+    
   end
     
   private
-  def check
-    return session[:checked_ratings] if params[:ratings].nil?
-    return session[:checked_ratings]=params[:ratings] if params[:ratings].is_a?(Array)
-    session[:checked_ratings] = params[:ratings].keys
+  def session_ratings
+    if params[:ratings] != nil and params[:ratings] != session[:ratings]
+        session[:ratings] = params[:ratings]
+    end
+    return @all_ratings if session[:ratings].nil?
+    return session[:ratings] if session[:ratings].is_a?(Array)
+    session[:ratings].keys
   end
   
   def session_items
@@ -36,8 +44,10 @@ class MoviesController < ApplicationController
   end
 
   def session_reset
-    session[:sort_items] = @sort_items
-    session[:ratings] = @checked_ratings
+      if (session[:sort] != params[:sort]) or (session[:ratings] != params[:ratings])
+        flash.keep
+        redirect_to({:sort => session[:sort], :ratings => session[:ratings]})
+      end
   end
 
   def new
