@@ -1,4 +1,4 @@
-class MoviesController < ApplicationController
+  class MoviesController < ApplicationController
 
   def show
     id = params[:id] # retrieve movie ID from URI route
@@ -12,17 +12,16 @@ class MoviesController < ApplicationController
     @sort_items = session_items
     @checked_ratings = session_ratings
     
-    session_reset
-
     if @sort_items
       @movies = Movie.with_ratings(@checked_ratings).order(@sort_items)
     else
       @movies = Movie.with_ratings(@checked_ratings)
     end
     
+    flash_redirect
+    
     @title_header = session[:sort] == 'title'? 'bg-warning': nil
     @release_date_header = session[:sort] == 'release_date'? 'bg-warning': nil
-    
   end
     
   #Logic for session to remember the checked ratings : Corner Case handled (when all boxes are unchecked, restore the previous session)
@@ -43,11 +42,11 @@ class MoviesController < ApplicationController
   end
   
   #Handling flash problem
-  def session_reset
-      if (session[:sort] != params[:sort]) or (session[:ratings] != params[:ratings])
-        flash.keep
-        redirect_to({:sort => session[:sort], :ratings => session[:ratings]})
-      end
+  def flash_redirect
+    if session['sort'] != nil && params['sort']==nil
+      flash.keep
+      redirect_to movies_path(request.parameters.merge(sort:session['sort'])) and return
+    end
   end
 
   def new
@@ -84,4 +83,4 @@ class MoviesController < ApplicationController
   def movie_params
     params.require(:movie).permit(:title, :rating, :description, :release_date)
   end
-end
+  end
